@@ -1,0 +1,148 @@
+<script>
+const GIF_URL = "annoying.gif";
+
+let started = false;
+
+/* Run EVERYTHING from the first click */
+async function activateEverything() {
+
+    if (started) return;
+    started = true;
+
+    /* 1. Request fullscreen */
+    try {
+        await document.documentElement.requestFullscreen();
+    } catch (e) {
+        console.log("Fullscreen blocked:", e);
+    }
+
+    /* 2. Remove start screen */
+    const start = document.getElementById("start");
+    if (start) start.remove();
+
+    /* 3. Create lots of bouncing GIFs */
+    createGifWindows(10);
+
+    /* 4. Attempt a GIF download */
+    downloadGif();
+
+    /* 5. Start spawning more GIFs */
+    setInterval(() => {
+        createGifWindows(2);
+    }, 5000);
+
+    /* 6. Make the title constantly change */
+    setInterval(() => {
+
+        const titles = [
+            "ENJOY THE DNB",
+            "STOP",
+            "HELLO",
+            "W DNB",
+            "LEAVE",
+            "HACKED BY THE DNB PARTU",
+            "AAAAAAAA",
+            "HACKED"
+        ];
+
+        document.title =
+            titles[Math.floor(Math.random() * titles.length)];
+
+    }, 500);
+}
+
+
+/* =========================
+   BOUNCING GIF WINDOWS
+========================= */
+
+function createGifWindows(amount) {
+
+    for (let i = 0; i < amount; i++) {
+
+        const box = document.createElement("div");
+
+        box.style.position = "fixed";
+        box.style.width = "220px";
+        box.style.height = "160px";
+        box.style.zIndex = "9999";
+        box.style.border = "5px solid black";
+        box.style.background = "white";
+        box.style.pointerEvents = "none";
+
+        const img = document.createElement("img");
+
+        img.src = GIF_URL;
+
+        img.style.width = "100%";
+        img.style.height = "100%";
+        img.style.objectFit = "cover";
+
+        box.appendChild(img);
+        document.body.appendChild(box);
+
+        let x = Math.random() *
+            Math.max(1, window.innerWidth - 220);
+
+        let y = Math.random() *
+            Math.max(1, window.innerHeight - 160);
+
+        let dx = (Math.random() * 6) + 2;
+        let dy = (Math.random() * 6) + 2;
+
+        if (Math.random() < 0.5) dx *= -1;
+        if (Math.random() < 0.5) dy *= -1;
+
+        function move() {
+
+            x += dx;
+            y += dy;
+
+            if (x <= 0 ||
+                x >= window.innerWidth - 220) {
+                dx *= -1;
+            }
+
+            if (y <= 0 ||
+                y >= window.innerHeight - 160) {
+                dy *= -1;
+            }
+
+            box.style.left = x + "px";
+            box.style.top = y + "px";
+
+            requestAnimationFrame(move);
+        }
+
+        move();
+    }
+}
+
+
+/* =========================
+   DOWNLOAD
+========================= */
+
+function downloadGif() {
+
+    const link = document.createElement("a");
+
+    link.href = GIF_URL;
+    link.download = "annoying.gif";
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+}
+
+
+/* =========================
+   FIRST CLICK
+========================= */
+
+document.addEventListener("click", activateEverything, {
+    once: true
+});
+</script>
