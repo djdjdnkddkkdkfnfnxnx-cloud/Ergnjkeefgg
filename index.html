@@ -1,48 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>DNB VVQN</title>
+
+<style>
+html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: black;
+    font-family: Arial, sans-serif;
+}
+
+#start {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+}
+
+#start button {
+    font-size: 30px;
+    padding: 25px 50px;
+    cursor: pointer;
+}
+
+.gifWindow {
+    position: fixed;
+    width: 220px;
+    height: 160px;
+    border: 5px solid black;
+    background: white;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+.gifWindow img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+</style>
+</head>
+
+<body>
+
+<div id="start">
+    <button>CLICK TO BEGIN</button>
+</div>
+
 <script>
-const GIF_URL = "annoying.gif";
+
+const GIF_URL = "fh7cm2.gif";
 
 let started = false;
 
-/* Run EVERYTHING from the first click */
+
+/* =========================
+   ACTIVATE EVERYTHING
+========================= */
+
 async function activateEverything() {
 
     if (started) return;
+
     started = true;
 
-    /* 1. Request fullscreen */
+
+    /* FULLSCREEN */
+
     try {
         await document.documentElement.requestFullscreen();
-    } catch (e) {
-        console.log("Fullscreen blocked:", e);
+    } catch (error) {
+        console.log("Fullscreen was blocked:", error);
     }
 
-    /* 2. Remove start screen */
-    const start = document.getElementById("start");
-    if (start) start.remove();
 
-    /* 3. Create lots of bouncing GIFs */
+    /* REMOVE START SCREEN */
+
+    const start = document.getElementById("start");
+
+    if (start) {
+        start.remove();
+    }
+
+
+    /* CREATE GIFS */
+
     createGifWindows(10);
 
-    /* 4. Attempt a GIF download */
+
+    /* ATTEMPT DOWNLOAD */
+
     downloadGif();
 
-    /* 5. Start spawning more GIFs */
-    setInterval(() => {
+
+    /* KEEP SPAWNING MORE GIFS */
+
+    setInterval(function() {
         createGifWindows(2);
     }, 5000);
 
-    /* 6. Make the title constantly change */
-    setInterval(() => {
+
+    /* CONSTANTLY CHANGE TITLE */
+
+    setInterval(function() {
 
         const titles = [
-            "ENJOY THE DNB",
+            "WHY",
             "STOP",
             "HELLO",
-            "W DNB",
+            "ERROR",
             "LEAVE",
-            "HACKED BY THE DNB PARTU",
+            "WHY ARE YOU HERE",
             "AAAAAAAA",
-            "HACKED"
+            "THE WEBSITE",
+            "WHAT",
+            "NO",
+            "HELP",
+            "WHY DID YOU CLICK"
         ];
 
         document.title =
@@ -62,57 +145,80 @@ function createGifWindows(amount) {
 
         const box = document.createElement("div");
 
-        box.style.position = "fixed";
-        box.style.width = "220px";
-        box.style.height = "160px";
-        box.style.zIndex = "9999";
-        box.style.border = "5px solid black";
-        box.style.background = "white";
-        box.style.pointerEvents = "none";
+        box.className = "gifWindow";
+
 
         const img = document.createElement("img");
 
         img.src = GIF_URL;
 
-        img.style.width = "100%";
-        img.style.height = "100%";
-        img.style.objectFit = "cover";
-
         box.appendChild(img);
+
         document.body.appendChild(box);
 
-        let x = Math.random() *
-            Math.max(1, window.innerWidth - 220);
 
-        let y = Math.random() *
-            Math.max(1, window.innerHeight - 160);
+        /* RANDOM START POSITION */
 
-        let dx = (Math.random() * 6) + 2;
-        let dy = (Math.random() * 6) + 2;
+        let x =
+            Math.random() *
+            Math.max(1, window.innerWidth - 230);
 
-        if (Math.random() < 0.5) dx *= -1;
-        if (Math.random() < 0.5) dy *= -1;
+        let y =
+            Math.random() *
+            Math.max(1, window.innerHeight - 170);
+
+
+        /* RANDOM SPEED */
+
+        let dx =
+            Math.random() * 6 + 2;
+
+        let dy =
+            Math.random() * 6 + 2;
+
+
+        /* RANDOM DIRECTION */
+
+        if (Math.random() < 0.5) {
+            dx *= -1;
+        }
+
+        if (Math.random() < 0.5) {
+            dy *= -1;
+        }
+
+
+        /* BOUNCE */
 
         function move() {
 
             x += dx;
             y += dy;
 
-            if (x <= 0 ||
-                x >= window.innerWidth - 220) {
+
+            if (
+                x <= 0 ||
+                x >= window.innerWidth - 230
+            ) {
                 dx *= -1;
             }
 
-            if (y <= 0 ||
-                y >= window.innerHeight - 160) {
+
+            if (
+                y <= 0 ||
+                y >= window.innerHeight - 170
+            ) {
                 dy *= -1;
             }
+
 
             box.style.left = x + "px";
             box.style.top = y + "px";
 
+
             requestAnimationFrame(move);
         }
+
 
         move();
     }
@@ -120,7 +226,7 @@ function createGifWindows(amount) {
 
 
 /* =========================
-   DOWNLOAD
+   DOWNLOAD GIF
 ========================= */
 
 function downloadGif() {
@@ -128,7 +234,8 @@ function downloadGif() {
     const link = document.createElement("a");
 
     link.href = GIF_URL;
-    link.download = "annoying.gif";
+
+    link.download = "fh7cm2.gif";
 
     document.body.appendChild(link);
 
@@ -139,10 +246,16 @@ function downloadGif() {
 
 
 /* =========================
-   FIRST CLICK
+   ANY FIRST CLICK
 ========================= */
 
-document.addEventListener("click", activateEverything, {
-    once: true
-});
+document.addEventListener(
+    "click",
+    activateEverything,
+    { once: true }
+);
+
 </script>
+
+</body>
+</html>
